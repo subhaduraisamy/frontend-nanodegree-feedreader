@@ -66,43 +66,38 @@ $(function() {
 
        // Load feed and wait until work is done
         beforeEach(function(done) {
-            loadFeed(0, done);
+            loadFeed(1, done);
         });
 
         // Check that completed work contains content
-        it('loads feed', function() {
-            const container = document.querySelector('.feed');
-            expect(container.children.length > 0).toBe(true);
+        it('has entires in feed container', function() {
+            let feedcontainer = document.querySelector('div.feed');
+            let entries = document.querySelectorAll('article.entry');
+            expect(entries.length > 0).toBeGreaterThan(0);
         });
     });
 
-    // Test suite for loading new content after initial load
-    describe('New Feed Selection', function() {
+   /* Test suite to check loading of new feeds */
+   describe('New Feed Selection', function () {
 
-        const container = document.querySelector('.feed');
-        const firstFeed = [];
+    // Variables that will hold old and new feed entries
+    let oldFeed;
+    let newFeed;
 
-        // Load multiple feeds and compare content to ensure change
-        beforeEach(function(done) {
-
-            // Load first feed
-            loadFeed(0);
-            
-            // Store values of first feed
-            Array.from(container.children).forEach(content => {
-                firstFeed.push(content.innerText);
-            });
-
-            // Load second feed
-            loadFeed(1, done);
-        });
+    beforeEach(function (done) {
         
-        // Compare first feed against new feed content
-        it('content changes', function() {
-            Array.from(container.children).forEach( (content, index) => {
-                expect(content.innerText !== firstFeed[index]).toBe(true);
+        loadFeed(3, function () {
+            oldFeed=document.querySelector('div.feed').innerHTML;
+            loadFeed(2, function () {
+            oldFeed = document.querySelector('div.feed').innerHTML;
+            done();
             });
         });
     });
+
+    it('Loads new feeds',function(){
+        expect(oldFeed).not.toBe(newFeed);
+    });
+});
     
 }());
